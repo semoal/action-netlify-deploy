@@ -1,4 +1,4 @@
-name: Netlify Deploy Action
+name: Netlify Deploy Action with Outputs
 description: Netlify deployments via GitHub actions
 author: Alex Gabites <https://github.com/South-Paw>
 branding:
