@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
-import NetlifyAPI from 'netlify';
+import { NetlifyAPI } from 'netlify';
 import * as path from 'path';
 import { createCommentMessage, getDeployUrl } from './util';
 
@@ -48,7 +48,7 @@ async function run(): Promise<void> {
     let message = core.getInput('message');
 
     // Create clients
-    const githubClient = github.getOctokit(githubToken);
+    const githubClient: any = github.getOctokit(githubToken);
     const netlifyClient = new NetlifyAPI(netlifyAuthToken);
 
     // If there's no explict deploy message input, then make a deploy message from the action's context.
@@ -86,7 +86,7 @@ async function run(): Promise<void> {
         deploy = deployment.deploy;
         core.setOutput('preview-name', deploy.name);
         core.setOutput('preview-url', getDeployUrl(draft, deploy));
-      } catch (error) {
+      } catch (error: any) {
         process.stderr.write('netlifyClient.deploy() failed\n');
         process.stderr.write(`${JSON.stringify(error, null, 2)}\n`);
         core.setFailed(error.message);
@@ -119,7 +119,7 @@ async function run(): Promise<void> {
             commit_sha: sha,
             body,
           });
-        } catch (error) {
+        } catch (error: any) {
           process.stderr.write('creating commit comment failed\n');
           process.stderr.write(`${JSON.stringify(error, null, 2)}\n`);
           core.setFailed(error.message);
@@ -140,7 +140,7 @@ async function run(): Promise<void> {
             issue_number: number,
             body,
           });
-        } catch (error) {
+        } catch (error: any) {
           process.stderr.write('creating pull request comment failed\n');
           process.stderr.write(`${JSON.stringify(error, null, 2)}\n`);
           core.setFailed(error.message);
@@ -155,7 +155,7 @@ async function run(): Promise<void> {
         process.stdout.write(`Creating deployment for "${githubDeployEnvironment}"\n`);
 
         try {
-          const deployment = await githubClient.repos.createDeployment({
+          const deployment: any = await githubClient.repos.createDeployment({
             owner,
             repo,
             ref: deploymentSha,
@@ -174,7 +174,7 @@ async function run(): Promise<void> {
             state: 'success',
             environment_url: getDeployUrl(draft, deploy),
           });
-        } catch (error) {
+        } catch (error: any) {
           process.stderr.write('creating deployment failed\n');
           process.stderr.write(`${JSON.stringify(error, null, 2)}\n`);
           core.setFailed(error.message);
@@ -197,7 +197,7 @@ async function run(): Promise<void> {
               target_url: getDeployUrl(draft, deploy),
               description: 'action-netlify-deploy status',
             });
-          } catch (error) {
+          } catch (error: any) {
             process.stderr.write('creating commit status failed\n');
             process.stderr.write(`${JSON.stringify(error, null, 2)}\n`);
             core.setFailed(error.message);
@@ -207,7 +207,7 @@ async function run(): Promise<void> {
         process.stdout.write(`[Dry run] GitHub commit status "success" on "${deploymentSha}"\n`);
       }
     }
-  } catch (error) {
+  } catch (error: any) {
     process.stderr.write(JSON.stringify(error, null, 2));
     core.setFailed(error.message);
   }
